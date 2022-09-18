@@ -22,7 +22,7 @@ subtitle                 : # site tagline that appears below site title in masth
 name                     : "Rodrigo De Rosa"
 description              : "Just another (great) tech blog."
 url                      : "https://www.rodrigoderosa.com"
-baseurl                  : "/blog"
+baseurl                  : ""
 repository               : "RodrigoDeRosa/RodrigoDeRosa.github.io" # GitHub username/repo-name e.g. "mmistakes/minimal-mistakes"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : "/assets/images/crab.png" # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
