@@ -1,0 +1,8 @@
+# Order here is from left to right (so upmost goes leftmost)
+main:
+  - title: "Tech Posts"
+    url: /tech-posts/
+    description: Some Software Engineering posts a curious crab might be interested in
+  - title: "About"
+    url: /about/
+    description: On how the crab got its nest
