@@ -21,7 +21,7 @@ As I always say, I consider myself a software engineer, not a backend engineer n
 {: .text-justify}
 
 ### The Now
-Right now I’m a Senior Software Engineer, Squad Lead and architecture enthusiast at [Secfi](https://secfi.com/), where I’ve been focusing mostly on the development of a set of tools that help people who owns private equity understand their financial situation in a more holistic way.
+Right now I’m a Senior Software Engineer and architecture enthusiast at [Secfi](https://secfi.com/), where I’ve been focusing mostly on the development of a set of tools that help people who owns private equity understand their financial situation in a more holistic way.
 {: .text-justify}
 
 ### The Path
