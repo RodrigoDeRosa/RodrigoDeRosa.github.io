@@ -1,5 +1,5 @@
 ---
-layout: post
+layout: single
 tag: tech
 title: "Creating a data transformation library in Python"
 ---
