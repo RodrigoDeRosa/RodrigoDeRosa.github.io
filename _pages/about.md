@@ -38,3 +38,4 @@ After a brief six months stay in [Booking.com](https://www.booking.com/), where 
 {: .text-justify}
 
 I was a Senior Software Engineer at [Secfi](https://secfi.com/) for over a year and a half, until the (very) rough start up life made us part ways. There, I focused mostly on the development of a set of tools that help people who owns private equity understand their financial situation in a more holistic way, allowing them to connect both their public assets (like stocks) and their private equity and understand their evolution with time and how they are connected.
+{: .text-justify}
