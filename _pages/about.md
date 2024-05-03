@@ -7,7 +7,7 @@ If you’re here, you probably want to know a bit more about The Crab’s Nest a
 
 ##  The Nest
 The Crab’s Nest was born as yet another tech blog where I plan to dump all things I find interesting and worth sharing about both my work experience, the stuff I read in my free time and maybe even some algorithm problem solving here and there, when I feel like LeetCoding.
-I would expect this to eventually grow into a place where you might find some non-tech posts too; I’m a quite curious person and find many (many, many) topics interesting. Hopefully, what tickles my mind will also be of interesting to you.
+I would expect this to eventually grow into a place where you might find some non-tech posts too; I’m a quite curious person and find many (many, many) topics interesting. Hopefully, what tickles my mind will also be of interest to you.
 {: .text-justify}
 
 ## The Crab
@@ -21,7 +21,7 @@ As I always say, I consider myself a software engineer, not a backend engineer n
 {: .text-justify}
 
 ### The Now
-Right now I’m a Senior Software Engineer and architecture enthusiast at [Secfi](https://secfi.com/), where I’ve been focusing mostly on the development of a set of tools that help people who owns private equity understand their financial situation in a more holistic way.
+Currently I'm working as a Platform Engineer at [Dexter Energy](https://dexterenergy.ai/), where we're trying to accelerate the energy transition by helping companies generate more profit with their renewable energy assets. More specifically, my team is in charge of the building platform that connects customers with our Machine Learning models, through which we ingest the required data to create forecasts for our customers and serve said forecasts.
 {: .text-justify}
 
 ### The Path
@@ -36,3 +36,5 @@ After two and a half years there I embarked on a journey to the city of Amsterda
 
 After a brief six months stay in [Booking.com](https://www.booking.com/), where I worked building and maintaining services for cross selling products (_“Hey! If you’re going to Mallorca you might want a car!”_), I moved to the wonderful Secfi.
 {: .text-justify}
+
+I was a Senior Software Engineer at [Secfi](https://secfi.com/) for over a year and a half, until the (very) rough start up life made us part ways. There, I focused mostly on the development of a set of tools that help people who owns private equity understand their financial situation in a more holistic way, allowing them to connect both their public assets (like stocks) and their private equity and understand their evolution with time and how they are connected.
