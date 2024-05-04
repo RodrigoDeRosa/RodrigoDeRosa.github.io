@@ -127,13 +127,12 @@ from py_transmuter.models.aggregator import ModelAggregator
 first = lambda iterable: iterable[0]
 
 def closest_fifteenth_minute(reading: SunWatchReading) -> datetime:
-	"""This method always returns the start of a 15 minute interval. 
-  If the reading has timestamp 14:13:00, this will return 14:00:00."""
+	"""This method always returns the start of a 15 minute interval. If the reading has timestamp 14:13:00, this will return 14:00:00."""
 	timestamp = reading.timestamp
-    closest_15 = (timestamp.minute // 15) * 15
-    minute_difference = closest_15 - timestamp.minute
-    new_dt = timestamp + timedelta(minutes=minute_difference)
-    return new_dt.replace(second=0, microsecond=0)
+  closest_15 = (timestamp.minute // 15) * 15
+  minute_difference = closest_15 - timestamp.minute
+  new_dt = timestamp + timedelta(minutes=minute_difference)
+  return new_dt.replace(second=0, microsecond=0)
 
 class SunWatchAggregator(ModelAggregator[IntervalTemperature, SunWatchReading]):
 	group_by = (closest_fifteenth_minute,)	
