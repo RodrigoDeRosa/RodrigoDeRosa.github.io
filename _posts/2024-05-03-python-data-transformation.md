@@ -16,6 +16,21 @@ It is not unlikely that at some point in our development career we'll come acros
 also not unlikely that, when doing this, we'll need to adapt the information somehow because _**their**_ data model is different to _**our**_ data model.
 {: .text-justify}
 
+This problem can take multiple shapes, three of them are:
+1. We need to map objects one to one from the source data model to the target data model.
+2. We need to aggregate objects, transforming many of the source data model to a single object of the target data model.
+3. We need to de-aggregate objects, transforming one object of the source data model to many of the target data model. We will not be discussing this problem here.
+{: .text-justify}
+
+What `py-transmuter` proposes for these problems is introducing a `Mapper` for the first one and an `Aggregator` for the second one. These would look like:
+{: .text-justify}
+
+<figure class="half">
+    <a href="/assets/images/MapperDiagram.png"><img src="/assets/images/MapperDiagram.png" style="width: 600px; height: auto;"></a>
+    <a href="/assets/images/AggregatorDiagram.png"><img src="/assets/images/AggregatorDiagram.png" style="width: 600px; height: auto;"></a>
+    <figcaption>A visual representation of the solution.</figcaption>
+</figure>
+
 ## A concrete example
 
 This sounds all very nice, but without a concrete example it might be difficult to fully grasp what kind of problem exactly we want to solve exactly.
@@ -29,6 +44,7 @@ Now the trick is that this data is ingested from different providers, and each p
 {: .text-justify}
 1. **MericaWeather**: They have 15 minute intervals (in `EST` timezone) and their temperature measures are in Fahrenheit.
 2. **SunWatch**: They have 1 minute intervals (in `UTC` timezone) that have measures in Celsius.
+{: .text-justify}
 
 More specifically, each reading in their responses looks like:
 ```python
@@ -68,6 +84,7 @@ Now that we have our problem definition clear, we can proceed to what `py-transm
 What we need to do should be very clear by now:
 * For **MericaWeather** we need to transform each entry’s `quarter` to `UTC` and assign it to `interval_start` and `temperature` to Celsius and assign it to `value`.
 * For **SunWatch** we need to aggregate every 15 entries and average the values (this is an  arbitrary decision); so we’d grab the first `timestamp` of each 15 entry group and set it as our `interval_start` and we’d set our `value` as the average of each of the group’s entries `measurement`. 
+{: .text-justify}
 
 Each of these problems can be represented as two different things: the first one is simply mapping one entity from one model to another and the second one requires certain aggregations, aside from the mapping. Let’s look at each one individually.
 {: .text-justify}
@@ -111,7 +128,7 @@ first = lambda iterable: iterable[0]
 
 def closest_fifteenth_minute(reading: SunWatchReading) -> datetime:
 	"""This method always returns the start of a 15 minute interval. 
-    If the reading has timestamp 14:13:00, this will return 14:00:00."""
+  If the reading has timestamp 14:13:00, this will return 14:00:00."""
 	timestamp = reading.timestamp
     closest_15 = (timestamp.minute // 15) * 15
     minute_difference = closest_15 - timestamp.minute
