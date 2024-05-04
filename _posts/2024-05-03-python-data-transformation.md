@@ -79,8 +79,8 @@ The great thing about `py-transmuter` is that all you need to do is define how m
 import pytz
 from py_transmuter.models.mapper import ModelMapper
 
-def to_utc(dt: datetime) -> datetime:
-	return dt.astimezone(pytz.UTC)
+def to_utc(est_timestamp: datetime) -> datetime:
+	return est_timestamp.astimezone(pytz.UTC)
 
 def fahrenheit_to_celsius(fahrenheit: Decimal) -> Decimal:
 	return (farenheit - 32) × 5/9
