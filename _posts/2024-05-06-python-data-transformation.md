@@ -82,11 +82,11 @@ Now that we have our problem definition clear, we can proceed to what `py-transm
 {: .text-justify}
 # The Solution
 What we need to do should be very clear by now:
-* For **MericaWeather** we need to transform each entry’s `quarter` to `UTC` and assign it to `interval_start` and `temperature` to Celsius and assign it to `value`.
+* For **MericaWeather** we need to transform each entry’s `quarter` to `UTC` and assign it to `interval_start` and each `temperature` to Celsius and assign it to `value`.
 * For **SunWatch** we need to aggregate every 15 entries and average the values (this is an  arbitrary decision); so we’d grab the first `timestamp` of each 15 entry group and set it as our `interval_start` and we’d set our `value` as the average of each of the group’s entries `measurement`. 
 {: .text-justify}
 
-Each of these problems can be represented as two different things: the first one is simply mapping one entity from one model to another and the second one requires certain aggregations, aside from the mapping. Let’s look at each one individually.
+Each of these problems can be represented as two different things: the first one is simply mapping one entity from one model to another and the second one requires certain aggregations aside from the mapping. Let’s look at each one individually.
 {: .text-justify}
 
 ## Mapping
@@ -130,10 +130,10 @@ def closest_fifteenth_minute(reading: SunWatchReading) -> datetime:
 	"""This method always returns the start of a 15 minute interval. 
 	If the reading has timestamp 14:13:00, this will return 14:00:00."""
 	timestamp = reading.timestamp
-  	closest_15 = (timestamp.minute // 15) * 15
+  closest_15 = (timestamp.minute // 15) * 15
  	minute_difference = closest_15 - timestamp.minute
-  	new_dt = timestamp + timedelta(minutes=minute_difference)
-  	return new_dt.replace(second=0, microsecond=0)
+  new_dt = timestamp + timedelta(minutes=minute_difference)
+  return new_dt.replace(second=0, microsecond=0)
 
 class SunWatchAggregator(ModelAggregator[IntervalTemperature, SunWatchReading]):
 	group_by = (closest_fifteenth_minute,)	
@@ -169,10 +169,9 @@ Finally, knowing that we’re aggregating readings within the same fifteen minut
 In our example above we were always working with `UTC` timezones in our "internal" service. Most times, things like these are not really static and vary depending on something from the context; for example, the geographical area for which we're forecasting weather.
 {: .text-justify}
 
-Imagine now that, instead of always using `UTC` in our system, we want to map the response of MericaWeather using a timezone that we only know during runtime; for example, the timezone of a given European country. Since both the `Mapper` and the `Aggregator` in `py-transmuter` are what I called `SelfInspector`s, this is very easily achieved  by accessing the (optional) `context` attribute that these classes have; look:
+Imagine now that, instead of always using `UTC` in our system, we want to map the response of **MericaWeather** using a timezone that we only know during runtime; for example, the timezone of a given European country. Since both the `Mapper` and the `Aggregator` in `py-transmuter` can "inspect themselves", this is very easily achieved by accessing the (optional) `context` attribute that these classes have; look:
 {: .text-justify}
 ```python
-import pytz
 from py_transmuter.models.mapper import ModelMapper
 
 class MericaWeatherMapper(ModelMapper[IntervalTemperature, MericaWeatherReading]):
@@ -210,8 +209,8 @@ class MyMapper(ModelMapper[SourceModel, TargetModel]):
 	instance_var: Any
 	class_var: ClassVar[Any]
 
-	def __init__(self, timezone: Any, *args, **kwargs):
-		self.timezone = timezone
+	def __init__(self, instance_var: Any, *args, **kwargs):
+		self.instance_var = instance_var
 		super().__init__(*args, **kwargs)
 
 	def instance_method(self, value: Any) -> Any:
