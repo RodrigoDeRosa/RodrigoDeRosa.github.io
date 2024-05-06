@@ -131,7 +131,7 @@ def closest_fifteenth_minute(reading: SunWatchReading) -> datetime:
 	If the reading has timestamp 14:13:00, this will return 14:00:00."""
 	timestamp = reading.timestamp
     closest_15 = (timestamp.minute // 15) * 15
- 	minute_difference = closest_15 - timestamp.minute
+    minute_difference = closest_15 - timestamp.minute
     new_dt = timestamp + timedelta(minutes=minute_difference)
     return new_dt.replace(second=0, microsecond=0)
 
