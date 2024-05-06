@@ -50,23 +50,23 @@ More specifically, each reading in their responses looks like:
 ```python
 @dataclass
 class MericaWeatherReading:
-	quarter: datetime  # 15 minute intervals in EST
-	temperature: Decimal  # Fahrenheit values
+    quarter: datetime  # 15 minute intervals in EST
+    temperature: Decimal  # Fahrenheit values
 
 @dataclass
 class SunWatchReading:
-	timestamp: datetime  # 1 minute intervals in UTC
-	measurement: Decimal  # Celsius values
+    timestamp: datetime  # 1 minute intervals in UTC
+    measurement: Decimal  # Celsius values
 ```
 
 Of course, normally you’d get a bunch of readings at a time, so we can assume that their actual API responses are something like:
 {: .text-justify}
 ```python
 class MericaWeatherResponse:
-	readings: list[MericaWeatherReading]
+    readings: list[MericaWeatherReading]
 
 class SunWatchResponse:
-	readings: list[SunWatchReading]
+    readings: list[SunWatchReading]
 ```
 
 To complete the example we need to know how our model looks, which could be something like:
@@ -74,8 +74,8 @@ To complete the example we need to know how our model looks, which could be some
 ```python
 @dataclass
 class IntervalTemperature:
-	interval_start: datetime  # 15 minute intervals in UTC
-	value: Decimal  # Celsius values
+    interval_start: datetime  # 15 minute intervals in UTC
+    value: Decimal  # Celsius values
 ```
 
 Now that we have our problem definition clear, we can proceed to what `py-transmuter` can do for you.
@@ -97,16 +97,16 @@ import pytz
 from py_transmuter.models.mapper import ModelMapper
 
 def to_utc(est_timestamp: datetime) -> datetime:
-	return est_timestamp.astimezone(pytz.UTC)
+    return est_timestamp.astimezone(pytz.UTC)
 
 def fahrenheit_to_celsius(fahrenheit: Decimal) -> Decimal:
-	return (farenheit - 32) × 5/9
+    return (farenheit - 32) × 5/9
 
 class MericaWeatherMapper(ModelMapper[IntervalTemperature, MericaWeatherReading]):
-	mappings = {
-		"interval_start": ("quarter", to_utc),
-		"value": ("temperature", fahrenheit_to_celsius),
-	}
+    mappings = {
+        "interval_start": ("quarter", to_utc),
+        "value": ("temperature", fahrenheit_to_celsius),
+    }
 ```
 
 Now that we have our mapper defined, getting our `IntervalTemperature` objects is as simple as:
@@ -127,22 +127,22 @@ from py_transmuter.models.aggregator import ModelAggregator
 first = lambda iterable: iterable[0]
 
 def closest_fifteenth_minute(reading: SunWatchReading) -> datetime:
-	"""This method always returns the start of a 15 minute interval. 
-	If the reading has timestamp 14:13:00, this will return 14:00:00."""
-	timestamp = reading.timestamp
+    """This method always returns the start of a 15 minute interval. 
+    If the reading has timestamp 14:13:00, this will return 14:00:00."""
+    timestamp = reading.timestamp
     closest_15 = (timestamp.minute // 15) * 15
     minute_difference = closest_15 - timestamp.minute
     new_dt = timestamp + timedelta(minutes=minute_difference)
     return new_dt.replace(second=0, microsecond=0)
 
 class SunWatchAggregator(ModelAggregator[IntervalTemperature, SunWatchReading]):
-	group_by = (closest_fifteenth_minute,)	
-	sort_by = ("timestamp",)
-
-	aggregations = {
-		"interval_start": ("timestamp", first),
-		"value": ("measurement", mean),
-	}
+    group_by = (closest_fifteenth_minute,)	
+    sort_by = ("timestamp",)
+    
+    aggregations = {
+        "interval_start": ("timestamp", first),
+        "value": ("measurement", mean),
+    }
 ```
 
 As with the mapper, getting our `IntervalTemperature` objects now is as simple as doing:
@@ -175,17 +175,17 @@ Imagine now that, instead of always using `UTC` in our system, we want to map th
 from py_transmuter.models.mapper import ModelMapper
 
 class MericaWeatherMapper(ModelMapper[IntervalTemperature, MericaWeatherReading]):
-	def to_local_timezone(self, est_timestamp: datetime) -> datetime:
-		return est_timestamp.astimezone(self.context["timezone"])
+    def to_local_timezone(self, est_timestamp: datetime) -> datetime:
+        return est_timestamp.astimezone(self.context["timezone"])
 
-	@staticmethod
-	def fahrenheit_to_celsius(fahrenheit: Decimal) -> Decimal:
-		return (farenheit - 32) × 5/9
+    @staticmethod
+    def fahrenheit_to_celsius(fahrenheit: Decimal) -> Decimal:
+        return (farenheit - 32) × 5/9
 
-	mappings = {
-		"interval_start": ("quarter", to_local_timezone),
-		"value": ("temperature", fahrenheit_to_celsius),
-	}
+    mappings = {
+        "interval_start": ("quarter", to_local_timezone),
+        "value": ("temperature", fahrenheit_to_celsius),
+    }
 ```
 
 This new `Mapper` now accesses it's context and extracts the `timezone` argument, which assumes will be present during runtime. Of course, when we instantiate it, we need to do:
@@ -206,21 +206,21 @@ The curious (and attentive) reader would also wonder if setting class specific i
 {: .text-justify}
 ```python
 class MyMapper(ModelMapper[SourceModel, TargetModel]):
-	instance_var: Any
-	class_var: ClassVar[Any]
+    instance_var: Any
+    class_var: ClassVar[Any]
 
-	def __init__(self, instance_var: Any, *args, **kwargs):
-		self.instance_var = instance_var
-		super().__init__(*args, **kwargs)
+    def __init__(self, instance_var: Any, *args, **kwargs):
+        self.instance_var = instance_var
+        super().__init__(*args, **kwargs)
 
-	def instance_method(self, value: Any) -> Any:
-		# This works!
-		return self.instance_var
+    def instance_method(self, value: Any) -> Any:
+        # This works!
+        return self.instance_var
 
-	@classmethod
-	def class_method(cls, value: Any) -> Any:
-		# This also works!
-		return cls.class_var
+    @classmethod
+    def class_method(cls, value: Any) -> Any:
+        # This also works!
+        return cls.class_var
 ```
 
 # The Implementation Details
