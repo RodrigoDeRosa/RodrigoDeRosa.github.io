@@ -127,12 +127,13 @@ from py_transmuter.models.aggregator import ModelAggregator
 first = lambda iterable: iterable[0]
 
 def closest_fifteenth_minute(reading: SunWatchReading) -> datetime:
-	"""This method always returns the start of a 15 minute interval. If the reading has timestamp 14:13:00, this will return 14:00:00."""
+	"""This method always returns the start of a 15 minute interval. 
+	If the reading has timestamp 14:13:00, this will return 14:00:00."""
 	timestamp = reading.timestamp
-  closest_15 = (timestamp.minute // 15) * 15
-  minute_difference = closest_15 - timestamp.minute
-  new_dt = timestamp + timedelta(minutes=minute_difference)
-  return new_dt.replace(second=0, microsecond=0)
+  	closest_15 = (timestamp.minute // 15) * 15
+ 	minute_difference = closest_15 - timestamp.minute
+  	new_dt = timestamp + timedelta(minutes=minute_difference)
+  	return new_dt.replace(second=0, microsecond=0)
 
 class SunWatchAggregator(ModelAggregator[IntervalTemperature, SunWatchReading]):
 	group_by = (closest_fifteenth_minute,)	
@@ -162,3 +163,83 @@ By telling the `Aggregator` that we want to `group_by` using the `closest_fiftee
 
 Finally, knowing that we’re aggregating readings within the same fifteen minute interval that are also sorted by their `timestamp`, we can simply create our reading objects by setting the `interval_start` as the first `timestamp` of the group (which will always be the beginning of the interval) and the `value` as the mean of all the `measurement`s in the group.
 {: .text-justify}
+
+## When static defitions simply don't cut it
+
+In our example above we were always working with `UTC` timezones in our "internal" service. Most times, things like these are not really static and vary depending on something from the context; for example, the geographical area for which we're forecasting weather.
+{: .text-justify}
+
+Imagine now that, instead of always using `UTC` in our system, we want to map the response of MericaWeather using a timezone that we only know during runtime; for example, the timezone of a given European country. Since both the `Mapper` and the `Aggregator` in `py-transmuter` are what I called `SelfInspector`s, this is very easily achieved  by accessing the (optional) `context` attribute that these classes have; look:
+{: .text-justify}
+```python
+import pytz
+from py_transmuter.models.mapper import ModelMapper
+
+class MericaWeatherMapper(ModelMapper[IntervalTemperature, MericaWeatherReading]):
+	def to_local_timezone(self, est_timestamp: datetime) -> datetime:
+		return est_timestamp.astimezone(self.context["timezone"])
+
+	@staticmethod
+	def fahrenheit_to_celsius(fahrenheit: Decimal) -> Decimal:
+		return (farenheit - 32) × 5/9
+
+	mappings = {
+		"interval_start": ("quarter", to_local_timezone),
+		"value": ("temperature", fahrenheit_to_celsius),
+	}
+```
+
+This new `Mapper` now accesses it's context and extracts the `timezone` argument, which assumes will be present during runtime. Of course, when we instantiate it, we need to do:
+{: .text-justify}
+```python
+country = Country(timezone='Europe/Amsterdam')
+# ...
+mapper = MericaWeatherMapper(context={"timezone": country.timezone})
+# ...
+response = MericaWeatherResponse(readings=...)
+mapped_objects = mapper.map_list(response.readings)
+```
+
+The curious reader would wonder what's the extent of this feature. To put it simply, anything that belongs to the class can be accessed. You can define a `@staticmethod` within the class and add it in the `mappings` or `aggregations` dictionary, you can define a `@classmethod` that access a class variable and, as we saw in the example, you can use instance methods as well.
+{: .text-justify}
+
+The curious (and attentive) reader would also wonder if setting class specific instance attributes instead of accessing the `context` is possible. The answer is yes:
+{: .text-justify}
+```python
+class MyMapper(ModelMapper[SourceModel, TargetModel]):
+	instance_var: Any
+	class_var: ClassVar[Any]
+
+	def __init__(self, timezone: Any, *args, **kwargs):
+		self.timezone = timezone
+		super().__init__(*args, **kwargs)
+
+	def instance_method(self, value: Any) -> Any:
+		# This works!
+		return self.instance_var
+
+	@classmethod
+	def class_method(cls, value: Any) -> Any:
+		# This also works!
+		return cls.class_var
+```
+
+# The Implementation Details
+
+In order to avoid making this blog post too long, I will save you the details of the implementation. The good thing about open source is that you can go ahead and look at it yourself from top to bottom, upside down and from the sides in the [library's repository](https://github.com/RodrigoDeRosa/py-transmuter).
+{: .text-justify} 
+
+Please go ahead and do it! I would definitely appreciate to have as many eyes as possible and receive as many critics and suggestions as I can handle.
+{: .text-justify}
+
+# Conclusion
+
+Hey! You made it to the end! Thanks for sticking with me all the way! 
+{: .text-justify}
+
+If you were hunting for a solution to your problem, I hope you found it here. If not, maybe you stumbled upon something that sparks some inspiration. Or at the very least, I hope this read has jiggled some synapses and sparked some killer ideas for later!
+{: .text-justify}
+
+Everything we discussed here is open source and open to suggestions and improvements. If you have any ideas, concerns or questions, don't hesitate to reach out, open a Pull Request or even create an Issue in the library's repository.
+{: .text-justify}
+
