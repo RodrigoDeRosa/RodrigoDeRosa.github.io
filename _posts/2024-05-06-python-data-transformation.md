@@ -33,7 +33,7 @@ What `py-transmuter` proposes for these problems is introducing a `Mapper` for t
 
 ## Why not `py-automapper`?
 
-There is a great Python library out there called [`py-automapper`](https://pypi.org/project/py-automapper/) that makes mapping between models extremely easy and that I'd definitely recommend if what you are doing is simply moving data from one data model to the next. The limitation of this great library is that it doesn't easily let you transform the data or aggregate it like `py-transmuter` does.
+There is a great Python library out there called [`py-automapper`](https://pypi.org/project/py-automapper/) that makes mapping between models extremely easy and that I'd definitely recommend if what you are doing is simply moving data from one data model to the next. The limitation of this great library is that it doesn't easily let you transform the data or aggregate it like `py-transmuter` does. So let's go ahead and see why _**yes**_ `py-transmuter`!
 {: .text-justify}
 
 ## A concrete example
