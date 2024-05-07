@@ -10,6 +10,11 @@ One interesting problem that we face often when integrating systems, be it from 
 Faced with the challenge of having to do this quite often, I designed [`py-transmuter`](https://pypi.org/project/py-transmuter/), a Python library that simplifies the process of transforming data objects by allowing the user to simply create a static definition of how the fields of one model map to the other and automating the transformation itself.
 {: .text-justify}
 
+## Why not just use `py-automapper`?
+
+There is a great Python library out there called [`py-automapper`](https://pypi.org/project/py-automapper/) that makes mapping between models extremely easy; if what you are doing is simply moving data from one data model to the next, this should be your go-to library. The limitation of this great library is that it doesn't easily let you transform the data you're mapping or aggregate it like `py-transmuter` does. So let's go ahead and see why using `py-transmuter` is a good idea!
+{: .text-justify}
+
 # The Problem
 
 It is not unlikely that at some point in our development career we'll come across the task of fetching data from some external party and store it in our systems. It is
@@ -30,11 +35,6 @@ What `py-transmuter` proposes for these problems is introducing a `Mapper` for t
     <a href="/assets/images/py-transmuter/AggregatorDiagram.png"><img src="/assets/images/py-transmuter/AggregatorDiagram.png" style="width: 600px; height: auto;"></a>
     <figcaption>A visual representation of the solution.</figcaption>
 </figure>
-
-## Why not `py-automapper`?
-
-There is a great Python library out there called [`py-automapper`](https://pypi.org/project/py-automapper/) that makes mapping between models extremely easy and that I'd definitely recommend if what you are doing is simply moving data from one data model to the next. The limitation of this great library is that it doesn't easily let you transform the data or aggregate it like `py-transmuter` does. So let's go ahead and see why _**yes**_ `py-transmuter`!
-{: .text-justify}
 
 ## A concrete example
 
