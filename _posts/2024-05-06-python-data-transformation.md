@@ -24,7 +24,7 @@ also not unlikely that, when doing this, we'll need to adapt the information som
 This problem can take multiple shapes, three of them are:
 1. We need to map objects one to one from the source data model to the target data model.
 2. We need to aggregate objects, transforming many of the source data model to a single object of the target data model.
-3. We need to de-aggregate objects, transforming one object of the source data model to many of the target data model. We will not be discussing this problem here.
+3. We need to de-aggregate (or interpolate) objects, transforming one object of the source data model to many of the target data model. We will not be discussing this problem here.
 {: .text-justify}
 
 What `py-transmuter` proposes for these problems is introducing a `Mapper` for the first one and an `Aggregator` for the second one. These would look like:
