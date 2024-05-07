@@ -86,14 +86,14 @@ What we need to do should be very clear by now:
 For **MericaWeather** we need to transform each entry’s `quarter` to `UTC` and assign it to `interval_start` and each `temperature` to Celsius and assign it to `value`. We want something like this:
 {: .text-justify}
 
-<figure class="half">
+<figure>
     <a href="/assets/images/py-transmuter/MericaWeatherMapper.png"><img src="/assets/images/py-transmuter/MericaWeatherMapper.png" style="width: 100%; height: auto;"></a>
 </figure>
 
 For **SunWatch** we need to aggregate every 15 entries and average the values (this is an  arbitrary decision); so we’d grab the first `timestamp` of each 15 entry group and set it as our `interval_start` and we’d set our `value` as the average of each of the group’s entries `measurement`.  We want something like this:
 {: .text-justify}
 
-<figure class="half">
+<figure>
     <a href="/assets/images/py-transmuter/SunWatchAggregator.png"><img src="/assets/images/py-transmuter/SunWatchAggregator.png" style="width: 100%; height: auto;"></a>
 </figure>
 
