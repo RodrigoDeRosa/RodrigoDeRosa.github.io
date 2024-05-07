@@ -7,7 +7,7 @@ title: "Adapting Data Models in Python"
 One interesting problem that we face often when integrating systems, be it from different companies or within the same organisation, is transforming data from the model used in one system to the model used in the other system.
 {: .text-justify}
 
-Faced with the challenge of having to do this quite often, I designed `py-transmuter`, a [Python library](https://pypi.org/project/py-transmuter/) that simplifies the process of transforming data objects by allowing the user to simply create a static definition of how the fields of one model map to the other and automating the transformation itself.
+Faced with the challenge of having to do this quite often, I designed [`py-transmuter`](https://pypi.org/project/py-transmuter/), a Python library that simplifies the process of transforming data objects by allowing the user to simply create a static definition of how the fields of one model map to the other and automating the transformation itself.
 {: .text-justify}
 
 # The Problem
@@ -30,6 +30,11 @@ What `py-transmuter` proposes for these problems is introducing a `Mapper` for t
     <a href="/assets/images/py-transmuter/AggregatorDiagram.png"><img src="/assets/images/py-transmuter/AggregatorDiagram.png" style="width: 600px; height: auto;"></a>
     <figcaption>A visual representation of the solution.</figcaption>
 </figure>
+
+## Why not `py-automapper`?
+
+There is a great Python library out there called [`py-automapper`](https://pypi.org/project/py-automapper/) that makes mapping between models extremely easy and that I'd definitely recommend if what you are doing is simply moving data from one data model to the next. The limitation of this great library is that it doesn't easily let you transform the data or aggregate it like `py-transmuter` does.
+{: .text-justify}
 
 ## A concrete example
 
